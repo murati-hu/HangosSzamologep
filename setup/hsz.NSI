@@ -1,7 +1,5 @@
-
-
-!define MUI_PRODUCT "Hangos számológép" ;Define your own software name here
-!define MUI_VERSION "" ;Define your own software version here
+;!define MUI_PRODUCT "Hangos számológép"
+;!define MUI_VERSION ""
 
 !include "MUI.nsh"
 
@@ -12,9 +10,9 @@
 
   ShowInstDetails show
 
-  InstallDir "$PROGRAMFILES\Hang_Szamologep"
+  InstallDir "$PROGRAMFILES\Hangos_Szamologep"
   
-  InstallDirRegKey HKCU "Software\Hang_Szamologep" ""
+  InstallDirRegKey HKCU "Software\Hangos_Szamologep" ""
 
 ;--------------------------------
 ;Modern UI Configuration
@@ -30,7 +28,15 @@
   !define MUI_UNINSTALLER
   !define MUI_UNCONFIRMPAGE
 
+;Pages
+
+  !insertmacro MUI_PAGE_COMPONENTS
+  !insertmacro MUI_PAGE_DIRECTORY
+  !insertmacro MUI_PAGE_INSTFILES
   
+  !insertmacro MUI_UNPAGE_CONFIRM
+  !insertmacro MUI_UNPAGE_INSTFILES
+
 ;--------------------------------
 ;Languages
  
@@ -65,27 +71,35 @@ Section "Hangos számológép" hsz
 	SectionIn RO
 
 	detailprint ">>> Hangos számológép telepítése..."
-	CreateDirectory "$INSTDIR"
-	CopyFiles "$EXEDIR\hang_szam.exe" "$INSTDIR\" 64
+	;CreateDirectory "$INSTDIR"
+	SetOutPath "$INSTDIR"
+	File "hang_szam.exe"
+	;CopyFiles "$EXEDIR\hang_szam.exe" "$INSTDIR\" 64
   	CreateDirectory "$SMPROGRAMS\Hangos számológép"
 	CreateShortCut "$SMPROGRAMS\Hangos számológép\Hangos számológép.lnk" "$INSTDIR\hang_szam.exe"
 	detailprint ""
 
 	detailprint ">>> Hangok másolása..."
 	CreateDirectory "$INSTDIR\hangok"
-	CopyFiles "$EXEDIR\hangok\*.*" "$INSTDIR\hangok" 2460
-	detailprint ""	
+	SetOutPath "$INSTDIR\hangok"
+	file "..\hangok\*.*"
+	;CopyFiles "$EXEDIR\hangok\*.*" "$INSTDIR\hangok" 2460
+	detailprint ""
 SectionEnd
 
 section "Microsoft Visual Basic 6.0 Runtime (SP5)" VB6
 	detailprint ">>> Microsoft Visual Basic 6.0 Runtime (SP5) telepítése..."
-	execwait "$EXEDIR\vbrun.exe /q"
+	SetOutPath "$INSTDIR"
+	file "vbrun.exe"
+	execwait "$INSTDIR\vbrun.exe /q"
 	detailprint ""
 sectionend
 
 section "DirectX 7" dx7
 	detailprint ">>> Microsoft DirectX 7.0 telepítése..."
-	execwait "$EXEDIR\dx70eng.exe /q"
+	SetOutPath "$INSTDIR"
+	file "dx70eng.exe"
+	execwait "$INSTDIR\dx70eng.exe /q"
 	detailprint ""
 sectionend
 
@@ -97,15 +111,15 @@ Section "Eltávolító alkalmazás" Eltavolit
 Sectionend 
 
 
-!insertmacro MUI_SECTIONS_FINISHHEADER
+;!insertmacro MUI_SECTIONS_FINISHHEADER
 
 
-!insertmacro MUI_FUNCTIONS_DESCRIPTION_BEGIN
+!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
 	!insertmacro MUI_DESCRIPTION_TEXT ${hsz} $(DESC_hsz)
 	!insertmacro MUI_DESCRIPTION_TEXT ${VB6} $(DESC_VB6)
 	!insertmacro MUI_DESCRIPTION_TEXT ${dx7} $(DESC_dx7)
 	!insertmacro MUI_DESCRIPTION_TEXT ${Eltavolit} $(DESC_Eltavolit)
-!insertmacro MUI_FUNCTIONS_DESCRIPTION_END
+!insertmacro MUI_FUNCTION_DESCRIPTION_END
  
 ;--------------------------------
 ;Uninstaller Section
@@ -118,5 +132,5 @@ Section "Uninstall"
 	rmdir "$INSTDIR\hangok"
 	rmdir "$INSTDIR"
 
-  	!insertmacro MUI_UNFINISHHEADER
+  	;!insertmacro MUI_UNFINISHHEADER
 SectionEnd
