@@ -6,8 +6,6 @@ Windows alkalmazás, ami a numerikus billenytűzeten keresztül
 segíti felhasználóit a műveletek és számok magyar nyelvű
 visszajelzésével.
 
-![Calculator Screenshot](./design/calc_screenshot.png)
-
 ## Project folder structure
  - `design` - Image and source assets
  - `hangok` - Voice and sound snippet resource files
