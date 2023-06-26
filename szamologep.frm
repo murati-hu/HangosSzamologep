@@ -472,6 +472,7 @@ hiba:
 End Sub
 
 Private Sub elojel_Click()
+On Error Resume Next
     kijelzo.Text = -1 * CDbl(kijelzo.Text)
     egyenlo.SetFocus
 End Sub
