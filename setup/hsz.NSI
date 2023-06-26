@@ -1,6 +1,3 @@
-;!define MUI_PRODUCT "Hangos számológép"
-;!define MUI_VERSION ""
-
 !include "MUI.nsh"
 
 ;--------------------------------
@@ -11,20 +8,18 @@
   ShowInstDetails show
 
   InstallDir "$PROGRAMFILES\Hangos_Szamologep"
-  
+
   InstallDirRegKey HKCU "Software\Hangos_Szamologep" ""
 
 ;--------------------------------
 ;Modern UI Configuration
-
-  ;!define USE_SUBSECTION
   ;!define MUI_LICENSEPAGE
   !define MUI_COMPONENTSPAGE
   !define MUI_COMPONENTSPAGE_SMALLDESC
   !define MUI_DIRECTORYPAGE
-  
+
   !define MUI_ABORTWARNING
-  
+
   !define MUI_UNINSTALLER
   !define MUI_UNCONFIRMPAGE
 
@@ -33,15 +28,15 @@
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
-  
+
   !insertmacro MUI_UNPAGE_CONFIRM
   !insertmacro MUI_UNPAGE_INSTFILES
 
 ;--------------------------------
 ;Languages
- 
+
   !insertmacro MUI_LANGUAGE "Hungarian"
-  
+
 ;--------------------------------
 ;Language Strings
 
@@ -53,15 +48,15 @@
 
 ;--------------------------------
 ;Data
-  
+
   ;LicenseData "license.rtf"
 
 ;--------------------------------
 ;Reserve Files
-  
+
   ;Things that need to be extracted on first (keep these lines before any File command!)
   ;Only useful for BZIP2 compression
-  
+
   ;ReserveFile "${NSISDIR}\Contrib\Icons\modern-header.bmp"
 
 ;--------------------------------
@@ -73,7 +68,7 @@ Section "Hangos számológép" hsz
 	detailprint ">>> Hangos számológép telepítése..."
 	;CreateDirectory "$INSTDIR"
 	SetOutPath "$INSTDIR"
-	File "hang_szam.exe"
+	File "..\hang_szam.exe"
 	;CopyFiles "$EXEDIR\hang_szam.exe" "$INSTDIR\" 64
   	CreateDirectory "$SMPROGRAMS\Hangos számológép"
 	CreateShortCut "$SMPROGRAMS\Hangos számológép\Hangos számológép.lnk" "$INSTDIR\hang_szam.exe"
@@ -83,7 +78,6 @@ Section "Hangos számológép" hsz
 	CreateDirectory "$INSTDIR\hangok"
 	SetOutPath "$INSTDIR\hangok"
 	file "..\hangok\*.*"
-	;CopyFiles "$EXEDIR\hangok\*.*" "$INSTDIR\hangok" 2460
 	detailprint ""
 SectionEnd
 
@@ -100,6 +94,10 @@ section "DirectX 7" dx7
 	SetOutPath "$INSTDIR"
 	file "dx70eng.exe"
 	execwait "$INSTDIR\dx70eng.exe /q"
+
+	SetOutPath "$SYSDIR"
+	file "dx7vb.dll"
+	execwait "regsvr32.exe /i /s $SYSDIR/dx7vb.dll"
 	detailprint ""
 sectionend
 
@@ -107,11 +105,8 @@ Section "Eltávolító alkalmazás" Eltavolit
 	detailprint ">>> Eltávoító alkalmazás telepítése..."
 	SetOutPath "$INSTDIR"
 	WriteUninstaller "$INSTDIR\eltavolit.exe"
-	CreateShortCut "$SMPROGRAMS\Hangos számológép\Eltávolítás.lnk" "$INSTDIR\eltavolit.exe" 
-Sectionend 
-
-
-;!insertmacro MUI_SECTIONS_FINISHHEADER
+	CreateShortCut "$SMPROGRAMS\Hangos számológép\Eltávolítás.lnk" "$INSTDIR\eltavolit.exe"
+Sectionend
 
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
@@ -120,7 +115,7 @@ Sectionend
 	!insertmacro MUI_DESCRIPTION_TEXT ${dx7} $(DESC_dx7)
 	!insertmacro MUI_DESCRIPTION_TEXT ${Eltavolit} $(DESC_Eltavolit)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
- 
+
 ;--------------------------------
 ;Uninstaller Section
 
@@ -131,6 +126,4 @@ Section "Uninstall"
 	rmdir "$SMPROGRAMS\Hangos számológép"
 	rmdir "$INSTDIR\hangok"
 	rmdir "$INSTDIR"
-
-  	;!insertmacro MUI_UNFINISHHEADER
 SectionEnd
